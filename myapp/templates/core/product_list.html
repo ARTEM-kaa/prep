@@ -1,0 +1,94 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Список товаров - ООО «Обувь»{% endblock %}
+{% block h1 %}Каталог товаров{% endblock %}
+
+{% block content %}
+{% comment %} {% if user.role.name == "admin" or user.role.name == "manager" %} {% endcomment %}
+<div>
+    <form method="get" style="display: flex;">
+        <div>
+            <label>Поиск:</label><br>
+            <input type="text" name="search" value="{{ current_search }}" placeholder="Найти..."
+                oninput="clearTimeout(this.delay); this.delay = setTimeout(() => this.form.submit(), 500);">
+        </div>
+
+        <div>
+            <label>Поставщик:</label><br>
+            <select name="supplier" onchange="this.form.submit()">
+                <option value="all">Все поставщики</option>
+                {% for s in suppliers %}
+                <option value="{{ s.id }}" {% if current_supplier == s.id|stringformat:"i" %}selected{% endif %}>{{ s.name
+                    }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label>Сортировка (кол-во):</label><br>
+            <select name="sort" onchange="this.form.submit()">
+                <option value="">Без сортировки</option>
+                <option value="asc" {% if current_sort == "asc" %}selected{% endif %}>По возрастанию</option>
+                <option value="desc" {% if current_sort == "desc" %}selected{% endif %}>По убыванию</option>
+            </select>
+        </div>
+
+
+        {% comment %}
+        {% if user.role.name == 'admin' or user.role.name == 'manager' %}
+        <div style="margin-left: 10px;">
+            <a href="{% url 'order_list' %}" class="btn" style="background-color: #5bc0de;">Заказы</a>
+        </div>
+        {% endif %}
+        {% endcomment %}
+
+
+        {% comment %} {% if user.role.name == 'admin' %}
+        <div style="margin-left: auto;">
+            <a href="{% url 'product_create' %}" class="btn">Добавить товар</a>
+        </div>
+        {% endif %} {% endcomment %}
+    </form>
+
+</div>
+{% comment %} {% endif %} {% endcomment %}
+<div>
+    {% for product in products %}
+    <div class="product-card 
+        {% if product.discount > 15 %}sale{% endif %}
+        {% if product.quantity == 0 %}out-of-stock{% endif %}">
+        {% if product.photo %}
+        <img src="{{ product.photo.url }}" class="image" alt="{{ product.name }}">
+        {% else %}
+        <img src="{% static 'images/picture.png' %}" class="image" alt="Заглушка">
+        {% endif %}
+        <div class="details">
+            <strong>{{ product.category.name }} | {{ product.name }}</strong>
+            <br />
+            Описание товара: {{ product.description }}
+            <br />
+            Производитель: {{ product.manufacturer.name }}
+            <br />
+            Поставщик: {{ product.supplier.name }}
+            <br />
+            {% if product.discount > 0 %}
+            Цена: <span class="old-price">{{ product.price }}</span> {{ product.final_price|floatformat:2 }} руб.
+            {% else %}
+            Цена: {{ product.price }} руб.
+            {% endif %}
+            <br />
+            Единица измерения: {{ product.unit }}
+            <br />
+            Количество на складе: {{ product.quantity }}
+            {% comment %} {% if user.role.name == "admin" %}
+            <br><a href="{% url 'product_edit' product.id %}">Редактировать товар</a>
+            {% endif %} {% endcomment %}
+        </div>
+        <div class="sale">{{ product.discount }}%</div>
+    </div>
+    {% empty %}
+    <p>Товары не найдены.</p>
+    {% endfor %}
+</div>
+{% endblock %}

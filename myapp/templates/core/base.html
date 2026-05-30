@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}ООО «Обувь»{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/Icon.ico' %}">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <img src="{% static 'images/Icon.png' %}" alt="Логотип">
+            <span>ООО «Обувь»</span>
+        </div>
+        <div>
+            {% if user.is_authenticated %}
+                <span>{{ user.get_role_display }}</span>
+                <strong>{{ user.full_name }}</strong> | 
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer; padding: 0; font-family: inherit; font-size: inherit;">Выйти</button>
+                </form>
+            {% else %}
+                <span class="role-badge">Гость</span> | 
+                <a href="{% url 'login' %}">Вернуться ко входу</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>{% block h1 %}{% endblock %}</h1>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
