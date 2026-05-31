@@ -1,3 +1,4 @@
+import os
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from decimal import Decimal
@@ -112,6 +113,23 @@ class Product(models.Model):
             discount_factor = Decimal(100 - self.discount) / Decimal(100)
             return self.price * discount_factor
         return self.price
+    
+    def save(self, *args, **kwargs):
+        """При обновлении фото — удаляем старое"""
+        try:
+            old_product = Product.objects.get(pk=self.pk)
+            if old_product.photo and self.photo != old_product.photo:
+                if os.path.isfile(old_product.photo.path):
+                    os.remove(old_product.photo.path)
+        except Product.DoesNotExist:
+            pass
+        super().save(*args, **kwargs)
+    
+    def delete(self, *args, **kwargs):
+        """При удалении товара — удаляем его фото"""
+        if self.photo and os.path.isfile(self.photo.path):
+            os.remove(self.photo.path)
+        super().delete(*args, **kwargs)
 
 
 class Order(models.Model):

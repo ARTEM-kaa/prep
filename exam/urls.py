@@ -23,6 +23,12 @@ from django.urls import path
 from myapp.views import (
     ProductListView,
     UserLoginView,
+    ProductCreateView,
+    ProductUpdateView,
+    OrderListView,
+    OrderCreateView,
+    OrderUpdateView,
+    OrderDeleteView,
 )
 
 urlpatterns = [
@@ -30,6 +36,12 @@ urlpatterns = [
     path("", UserLoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(next_page="login"), name="logout"),
     path("products/", ProductListView.as_view(), name="product_list"),
+    path("products/create/", ProductCreateView.as_view(), name="product_create"),
+    path("products/<int:pk>/edit/", ProductUpdateView.as_view(), name="product_edit"),
+    path("orders/", OrderListView.as_view(), name="order_list"),
+    path("orders/create/", OrderCreateView.as_view(), name="order_create"),
+    path("orders/<int:pk>/edit/", OrderUpdateView.as_view(), name="order_edit"),
+    path("orders/<int:pk>/delete/", OrderDeleteView.as_view(), name="order_delete"),
 ]
 
 if settings.DEBUG:

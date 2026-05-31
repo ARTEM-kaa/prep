@@ -1,0 +1,144 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}
+{% if is_edit %}Редактирование товара{% else %}Добавление товара{% endif %}
+{% endblock %}
+
+{% block h1 %}
+{% if is_edit %}Редактирование товара: {{ object.article }}{% else %}Новый товар{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+            <div class="alert alert-error">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Артикул -->
+        <div class="form-group">
+            <label for="{{ form.article.id_for_label }}">Артикул:</label>
+            {{ form.article }}
+            {% if form.article.errors %}
+                <div class="field-error">{{ form.article.errors }}</div>
+            {% endif %}
+            {% if is_edit %}
+                <small class="help-text">ID товара: {{ object.id }} (автоматически, только для чтения)</small>
+            {% endif %}
+        </div>
+        
+        <!-- Наименование товара -->
+        <div class="form-group">
+            <label for="{{ form.name.id_for_label }}">Наименование товара:</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <div class="field-error">{{ form.name.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Категория (выпадающий список) -->
+        <div class="form-group">
+            <label for="{{ form.category.id_for_label }}">Категория товара:</label>
+            {{ form.category }}
+            {% if form.category.errors %}
+                <div class="field-error">{{ form.category.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Описание -->
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">Описание товара:</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div class="field-error">{{ form.description.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Производитель (выпадающий список) -->
+        <div class="form-group">
+            <label for="{{ form.manufacturer.id_for_label }}">Производитель:</label>
+            {{ form.manufacturer }}
+            {% if form.manufacturer.errors %}
+                <div class="field-error">{{ form.manufacturer.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Поставщик (выпадающий список) -->
+        <!-- ИСПРАВЛЕНО: используем поле supplier вместо supplier_name -->
+        <div class="form-group">
+            <label for="{{ form.supplier.id_for_label }}">Поставщик:</label>
+            {{ form.supplier }}
+            {% if form.supplier.errors %}
+                <div class="field-error">{{ form.supplier.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Цена -->
+        <div class="form-group">
+            <label for="{{ form.price.id_for_label }}">Цена (руб.):</label>
+            {{ form.price }}
+            {% if form.price.errors %}
+                <div class="field-error">{{ form.price.errors }}</div>
+            {% endif %}
+            <small class="help-text">Может включать сотые части (например, 99.99), не может быть отрицательной</small>
+        </div>
+        
+        <!-- Единица измерения -->
+        <div class="form-group">
+            <label for="{{ form.unit.id_for_label }}">Единица измерения:</label>
+            {{ form.unit }}
+            {% if form.unit.errors %}
+                <div class="field-error">{{ form.unit.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Количество на складе -->
+        <div class="form-group">
+            <label for="{{ form.quantity.id_for_label }}">Количество на складе:</label>
+            {{ form.quantity }}
+            {% if form.quantity.errors %}
+                <div class="field-error">{{ form.quantity.errors }}</div>
+            {% endif %}
+            <small class="help-text">Не может быть отрицательным</small>
+        </div>
+        
+        <!-- Действующая скидка -->
+        <div class="form-group">
+            <label for="{{ form.discount.id_for_label }}">Действующая скидка (%):</label>
+            {{ form.discount }}
+            {% if form.discount.errors %}
+                <div class="field-error">{{ form.discount.errors }}</div>
+            {% endif %}
+            <small class="help-text">От 0 до 100 процентов</small>
+        </div>
+        
+        <!-- Фото товара -->
+        <div class="form-group">
+            <label for="{{ form.photo.id_for_label }}">Фото товара:</label>
+            {% if object and object.photo %}
+                <div class="current-photo">
+                    <img src="{{ object.photo.url }}" alt="Текущее фото" style="max-width: 100px; max-height: 100px;">
+                    <p>Текущее фото: {{ object.photo.name }}</p>
+                </div>
+            {% endif %}
+            {{ form.photo }}
+            {% if form.photo.errors %}
+                <div class="field-error">{{ form.photo.errors }}</div>
+            {% endif %}
+            <small class="help-text">Рекомендуемый размер: 300x200 пикселей</small>
+        </div>
+        
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a href="{% url 'product_list' %}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

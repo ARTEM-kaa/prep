@@ -1,0 +1,82 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - ООО «Обувь»{% endblock %}
+{% block h1 %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="post">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+            <div class="alert alert-error">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Артикулы товаров и количество (задание: поле "артикул") -->
+        <div class="form-group">
+            <label for="items">Артикулы товаров (формат: артикул,количество; артикул,количество):</label>
+            <textarea id="items" name="items" rows="3" class="form-control" placeholder="Пример: A112T4,2; F635R4,2" required>{% if items %}{{ items }}{% endif %}</textarea>
+            <small class="help-text">Укажите артикул товара и количество через запятую. Несколько товаров разделяйте точкой с запятой.</small>
+        </div>
+        
+        <!-- Статус заказа (выпадающий список) -->
+        <div class="form-group">
+            <label for="{{ form.status.id_for_label }}">Статус заказа:</label>
+            {{ form.status }}
+            {% if form.status.errors %}
+                <div class="field-error">{{ form.status.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Адрес пункта выдачи (выпадающий список) -->
+        <div class="form-group">
+            <label for="{{ form.pickup_point.id_for_label }}">Адрес пункта выдачи:</label>
+            {{ form.pickup_point }}
+            {% if form.pickup_point.errors %}
+                <div class="field-error">{{ form.pickup_point.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Дата заказа -->
+        <div class="form-group">
+            <label for="{{ form.order_date.id_for_label }}">Дата заказа:</label>
+            {{ form.order_date }}
+            {% if form.order_date.errors %}
+                <div class="field-error">{{ form.order_date.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Дата выдачи (доставки) -->
+        <div class="form-group">
+            <label for="{{ form.delivery_date.id_for_label }}">Дата доставки:</label>
+            {{ form.delivery_date }}
+            {% if form.delivery_date.errors %}
+                <div class="field-error">{{ form.delivery_date.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Код получения (скрытое поле, генерируется автоматически) -->
+        <div class="form-group">
+            <label>Код получения:</label>
+            {% if object %}
+                <input type="text" value="{{ object.pickup_code }}" class="form-control" disabled>
+                <small class="help-text">Генерируется автоматически, не редактируется</small>
+            {% else %}
+                <input type="text" value="Будет сгенерирован автоматически" class="form-control" disabled>
+            {% endif %}
+        </div>
+        
+        <!-- Пользователь (клиент) — скрыто, берётся из request.user -->
+        
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-primary">{{ button_text }}</button>
+            <a href="{% url 'order_list' %}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
