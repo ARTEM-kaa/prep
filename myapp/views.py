@@ -14,6 +14,8 @@ import random
 from .forms import ProductForm, OrderForm
 from .models import Product, Supplier, Category, Manufacturer, Order, OrderItem
 
+# От сюда модуль 2
+
 class UserLoginView(LoginView):
     template_name = "core/login.html"
 
@@ -55,6 +57,9 @@ class ProductListView(ListView):
 
         return context
 
+# Конец модуля 2
+
+# Начало модуль 3
 
 class AdminRequiredMixin(UserPassesTestMixin):
     def test_func(self):
@@ -69,41 +74,27 @@ class ProductCreateView(AdminRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = "core/product_form.html"
-    success_url = reverse_lazy("product_list")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = "Добавление товара"
-        context["button_text"] = "Добавить"
-        context["all_suppliers"] = Supplier.objects.all()
-        context["all_categories"] = Category.objects.all()
-        context["all_manufacturers"] = Manufacturer.objects.all()
-        return context
 
     def form_valid(self, form):
         messages.success(self.request, "Товар успешно добавлен")
-        return super().form_valid(form)
+        form.save()
+        return redirect('product_list')
 
 
 class ProductUpdateView(AdminRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = "core/product_form.html"
-    success_url = reverse_lazy("product_list")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Редактирование товара"
-        context["button_text"] = "Сохранить"
         context["is_edit"] = True
-        context["all_suppliers"] = Supplier.objects.all()
-        context["all_categories"] = Category.objects.all()
-        context["all_manufacturers"] = Manufacturer.objects.all()
         return context
 
     def form_valid(self, form):
         messages.success(self.request, "Товар успешно обновлен")
-        return super().form_valid(form)
+        form.save()
+        return redirect('product_list')
     
 
 class ProductDeleteView(AdminRequiredMixin, View):
@@ -115,6 +106,10 @@ class ProductDeleteView(AdminRequiredMixin, View):
         except Exception as e:
             messages.error(request, "Невозможно удалить товар, так как он присутствует в заказах")
         return redirect('product_list')
+    
+# Конец модуля 3
+
+# Начало и до конца файла модуль 4
     
     
 class ManagerOrAdminRequiredMixin(UserPassesTestMixin):
@@ -142,12 +137,6 @@ class OrderCreateView(AdminRequiredMixin, CreateView):
     model = Order
     form_class = OrderForm
     template_name = "core/order_form.html"
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = "Добавление заказа"
-        context["button_text"] = "Добавить"
-        return context
     
     @transaction.atomic
     def form_valid(self, form):
@@ -227,10 +216,8 @@ class OrderCreateView(AdminRequiredMixin, CreateView):
     
     def form_invalid(self, form):
         """Если форма невалидна, показываем ошибки"""
-        for field, errors in form.errors.items():
-            for error in errors:
-                messages.error(self.request, f"{field}: {error}")
-        return redirect('order_create')
+        messages.error(self.request, "Пожалуйста, исправьте ошибки в форме")
+        return super().form_invalid(form)
 
 
 class OrderUpdateView(AdminRequiredMixin, UpdateView):
@@ -241,8 +228,7 @@ class OrderUpdateView(AdminRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Редактирование заказа"
-        context["button_text"] = "Сохранить"
+        context["is_edit"] = True
         
         # Формируем строку с артикулами для редактирования
         items = []
@@ -345,7 +331,7 @@ class OrderUpdateView(AdminRequiredMixin, UpdateView):
 class OrderDeleteView(AdminRequiredMixin, DeleteView):
     """Удаление заказа (только администратор)"""
     model = Order
-    success_url = '/orders/'
+    success_url = reverse_lazy('order_list')
     
     def delete(self, request, *args, **kwargs):
         order = self.get_object()

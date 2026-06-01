@@ -32,12 +32,15 @@ from myapp.views import (
 )
 
 urlpatterns = [
+    # Модуль 2:
     path('admin/', admin.site.urls),
     path("", UserLoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(next_page="login"), name="logout"),
     path("products/", ProductListView.as_view(), name="product_list"),
+    # Модуль 3:
     path("products/create/", ProductCreateView.as_view(), name="product_create"),
     path("products/<int:pk>/edit/", ProductUpdateView.as_view(), name="product_edit"),
+    # Модуль 4:
     path("orders/", OrderListView.as_view(), name="order_list"),
     path("orders/create/", OrderCreateView.as_view(), name="order_create"),
     path("orders/<int:pk>/edit/", OrderUpdateView.as_view(), name="order_edit"),

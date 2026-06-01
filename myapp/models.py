@@ -4,6 +4,8 @@ from django.db import models
 from decimal import Decimal
 
 
+# Модуль 1 весь файл
+
 class Category(models.Model):
     """Категории товаров (справочник)"""
     name = models.CharField(max_length=100, unique=True, verbose_name="Название категории")
@@ -166,17 +168,8 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     """Состав заказа (связующая таблица для 1НФ)"""
-    order = models.ForeignKey(
-        Order, 
-        on_delete=models.CASCADE,  # При удалении заказа удаляется и его состав
-        related_name='items',
-        verbose_name="Заказ"
-    )
-    product = models.ForeignKey(
-        Product, 
-        on_delete=models.PROTECT,
-        verbose_name="Товар"
-    )
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', verbose_name="Заказ")
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, verbose_name="Товар")
     quantity = models.IntegerField(verbose_name="Количество")
 
     class Meta:

@@ -1,12 +1,10 @@
 import csv
 import os
-import shutil
 from decimal import Decimal
 from typing import Any
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from django.core.files import File
 from datetime import datetime
 
 from myapp.models import (
@@ -121,21 +119,13 @@ class Command(BaseCommand):
                         }
                     )
                     
-                    # Обрабатываем фото отдельно (исправленная часть!)
+                    # Обрабатываем фото отдельно
                     if photo_file:
                         src_path = os.path.join(media_path, photo_file)
                         if os.path.exists(src_path):
-                            dst_full_path = os.path.join(media_path, photo_file)
-                            
-                            if not os.path.exists(dst_full_path):
-                                shutil.copy2(src_path, dst_full_path)
-                                self.stdout.write(f"      └─ Скопировано фото: {photo_file}")
-                            
-                            # Сохраняем фото — передаём ТОЛЬКО имя файла
-                            with open(dst_full_path, 'rb') as f_img:
-                                from django.core.files import File as DjangoFile
-                                product.photo.save(photo_file, DjangoFile(f_img), save=True)
-                                self.stdout.write(f"      └─ Фото привязано: {photo_file}")
+                            product.photo = f"products/{photo_file}"
+                            product.save(update_fields=['photo'])
+                            self.stdout.write(f"      └─ Фото привязано: {photo_file}")
                         else:
                             self.stdout.write(f"      └─ ⚠️ Файл не найден: {src_path}")
                     

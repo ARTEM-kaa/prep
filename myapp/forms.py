@@ -4,6 +4,8 @@ from PIL import Image
 import os
 
 
+# Начало модуль 3
+
 class ProductForm(forms.ModelForm):
     """Форма для добавления и редактирования товара (Модуль 3)"""
     
@@ -20,7 +22,7 @@ class ProductForm(forms.ModelForm):
             "photo",
             "category",
             "manufacturer",
-            "supplier",  # ← ИСПРАВЛЕНО: выбираем из существующих поставщиков
+            "supplier",
         ]
         labels = {
             "article": "Артикул",
@@ -114,9 +116,11 @@ class ProductForm(forms.ModelForm):
             raise forms.ValidationError(f"Ошибка обработки изображения: {e}")
         
         return photo
+    
+# Конец модуля 3
 
+# Начало модуля 4 и до конца файла
 
-# Добавьте в конец forms.py:
 
 class OrderForm(forms.ModelForm):
     """Форма для добавления и редактирования заказа (Модуль 4)"""

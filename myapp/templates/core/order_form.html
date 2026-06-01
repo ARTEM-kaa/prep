@@ -1,8 +1,13 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}{{ title }} - ООО «Обувь»{% endblock %}
-{% block h1 %}{{ title }}{% endblock %}
+{% block title %}
+{% if is_edit %}Редактирование заказа{% else %}Добавление заказа{% endif %}
+{% endblock %}
+
+{% block h1 %}
+{% if is_edit %}Редактирование заказа: {{ object.article }}{% else %}Новый заказ{% endif %}
+{% endblock %}
 
 {% block content %}
 <div class="form-container">
@@ -74,9 +79,10 @@
         <!-- Пользователь (клиент) — скрыто, берётся из request.user -->
         
         <div class="form-buttons">
-            <button type="submit" class="btn btn-primary">{{ button_text }}</button>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
             <a href="{% url 'order_list' %}" class="btn btn-secondary">Отмена</a>
         </div>
     </form>
 </div>
 {% endblock %}
+{% comment %} Весь файл для модуля 4 {% endcomment %}
