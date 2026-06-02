@@ -25,6 +25,7 @@ from myapp.views import (
     UserLoginView,
     ProductCreateView,
     ProductUpdateView,
+    ProductDeleteView,
     OrderListView,
     OrderCreateView,
     OrderUpdateView,
@@ -40,6 +41,7 @@ urlpatterns = [
     # Модуль 3:
     path("products/create/", ProductCreateView.as_view(), name="product_create"),
     path("products/<int:pk>/edit/", ProductUpdateView.as_view(), name="product_edit"),
+    path("products/<int:pk>/delete/", ProductDeleteView.as_view(), name="product_delete"),
     # Модуль 4:
     path("orders/", OrderListView.as_view(), name="order_list"),
     path("orders/create/", OrderCreateView.as_view(), name="order_create"),

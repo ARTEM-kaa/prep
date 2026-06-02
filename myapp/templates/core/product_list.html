@@ -19,7 +19,7 @@
             <select name="supplier" onchange="this.form.submit()">
                 <option value="all">Все поставщики</option>
                 {% for supplier in suppliers %}
-                <option value="{{ supplier.id }}" {% if current_supplier == supplier.id|stringformat:"i" %}selected{% endif %}>{{ supplier.name}}</option>
+                    <option value="{{ supplier.id }}" {% if current_supplier == supplier.id|stringformat:"i" %}selected{% endif %}>{{ supplier.name}}</option>
                 {% endfor %}
             </select>
         </div>
@@ -36,14 +36,14 @@
 
         {% if user.role == 'admin' or user.role == 'manager' %}
         <div style="margin-left: 10px;">
-            <a href="{% url 'order_list' %}" class="btn" style="background-color: #5bc0de;">Заказы</a>
+            <a href="{% url 'order_list' %}" style="background-color: #5bc0de;">Заказы</a>
         </div>
         {% endif %}
 
 
         {% if user.role == 'admin' %}
         <div style="margin-left: auto;">
-            <a href="{% url 'product_create' %}" class="btn">Добавить товар</a>
+            <a href="{% url 'product_create' %}">Добавить товар</a>
         </div>
         {% endif %}
     </form>
@@ -56,9 +56,9 @@
         {% if product.discount > 15 %}sale{% endif %}
         {% if product.quantity == 0 %}out-of-stock{% endif %}">
         {% if product.photo %}
-        <img src="{{ product.photo.url }}" class="image" alt="{{ product.name }}">
+            <img src="{{ product.photo.url }}" class="image" alt="{{ product.name }}">
         {% else %}
-        <img src="{% static 'images/picture.png' %}" class="image" alt="Заглушка">
+            <img src="{% static 'images/picture.png' %}" class="image" alt="Заглушка">
         {% endif %}
         <div class="details">
             <strong>{{ product.category.name }} | {{ product.name }}</strong>
@@ -70,16 +70,21 @@
             Поставщик: {{ product.supplier.name }}
             <br />
             {% if product.discount > 0 %}
-            Цена: <span class="old-price">{{ product.price }}</span> {{ product.final_price|floatformat:2 }} руб.
+                Цена: <span class="old-price">{{ product.price }}</span> {{ product.final_price|floatformat:2 }} руб.
             {% else %}
-            Цена: {{ product.price }} руб.
+                Цена: {{ product.price }} руб.
             {% endif %}
             <br />
             Единица измерения: {{ product.unit }}
             <br />
             Количество на складе: {{ product.quantity }}
             {% if user.role == "admin" %}
-            <br><a href="{% url 'product_edit' product.id %}">Редактировать товар</a>
+                <br><a href="{% url 'product_edit' product.id %}">Редактировать товар</a>
+                <form action="{% url 'product_delete' product.id %}" method="post" style="display: inline;"
+                      onsubmit="return confirm('Вы уверены, что хотите удалить этот продукт?');">
+                    {% csrf_token %}
+                    <button type="submit">Удалить</button>
+                </form>
             {% endif %}
         </div>
         <div class="sale">{{ product.discount }}%</div>

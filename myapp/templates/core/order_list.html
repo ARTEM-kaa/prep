@@ -13,6 +13,12 @@
     {% endif %}
 </div>
 
+<!-- Кнопка возврата к товарам -->
+<div style="margin-top: 20px;">
+    <a href="{% url 'product_list' %}" class="btn btn-secondary">← Вернуться к товарам</a>
+    <br><br>
+</div>
+
 <!-- Список заказов в виде карточек (как на макете) -->
 <div class="orders-grid">
     {% for order in orders %}
@@ -76,11 +82,6 @@
         <p>Заказы не найдены</p>
     </div>
     {% endfor %}
-</div>
-
-<!-- Кнопка возврата к товарам -->
-<div style="margin-top: 20px;">
-    <a href="{% url 'product_list' %}" class="btn btn-secondary">← Вернуться к товарам</a>
 </div>
 
 {% endblock %}

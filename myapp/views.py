@@ -97,13 +97,16 @@ class ProductUpdateView(AdminRequiredMixin, UpdateView):
         return redirect('product_list')
     
 
-class ProductDeleteView(AdminRequiredMixin, View):
-    def post(self, request, pk):
-        product = get_object_or_404(Product, pk=pk)
+class ProductDeleteView(AdminRequiredMixin, DeleteView):
+    model = Product
+    success_url = reverse_lazy('product_list')
+    
+    def delete(self, request, *args, **kwargs):
+        product = self.get_object()
         try:
             product.delete()
             messages.success(request, "Товар успешно удалён")
-        except Exception as e:
+        except Exception:
             messages.error(request, "Невозможно удалить товар, так как он присутствует в заказах")
         return redirect('product_list')
     
