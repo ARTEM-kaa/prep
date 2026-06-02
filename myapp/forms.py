@@ -50,6 +50,15 @@ class ProductForm(forms.ModelForm):
             "supplier": forms.Select(attrs={"class": "form-control"}),
             "photo": forms.ClearableFileInput(attrs={"class": "form-control"}),
         }
+        
+        error_messages = {
+            'article': {
+                'unique': "Товар с таким артикулом уже существует.",
+            },
+            'photo': {
+                'invalid_image': "Загрузите корректное изображение. Файл поврежден или имеет неподдерживаемый формат.",
+            },
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -1,0 +1,105 @@
+Пароль от ROSATOM_EX: ITKol2026
+
+
+
+# Чтение файла с нужной кодировкой
+Get-Content .\task.txt -Encoding utf8
+
+
+
+Открываем файлы excel, анализируем.
+
+Создаем отдельные таблицы для 3НФ (исходные таблицы не меняем)
+Изменяем названия столбцов/ролей на английские
+
+Открываем DBeaver, создаем новое подключение
+
+Создаем базу данных (стандартные настройки, пишем имя ДБ)
+
+ПКМ по дб, создать sql скрипт (потом проверить)
+
+Начинаем от мелких таблиц к большим (обращаем внимание на связи)
+
+Запускаем создание
+
+После переходим в проекты/Diagrams. Создаем новую диаграмму
+
+Сохраняем в пнг, после конвертируем в pdf (желательно сделать в конце работы)
+
+Создаю папку с проектом. Создаю виртуальное окружение (python -m venv venv)
+
+Перехожу в venv (.\venv\Scripts\activate)
+
+Устанавливаем библиотеки
+pip install django
+pip install psycopg2 "psycopg2-binary"
+pip install Pillow
+pip install uv
+
+Создание project.toml
+uv init --no-readme
+uv add django psycopg2 pillow
+
+Запуск django
+django-admin startproject exam .
+python manage.py startapp myapp
+
+Пишем setting.py (myapp, БД (узнать пароль от дб), и пути снизу файла):
+AUTH_USER_MODEL = "myapp.User"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
+
+LOGIN_REDIRECT_URL = "product_list"
+LOGOUT_REDIRECT_URL = "login"
+
+Пишем models.py
+
+Делаем миграции
+python manage.py makemigrations
+python manage.py migrate
+
+Создаем csv файлы (без связующих таблиц)
+Формат csv: между столбцами запятые без пробела, описание в ковычках
+
+В myapp создаем management\commands
+
+Пишем import_data.py
+
+Создаем папки: 
+part_1\add_2\import (туда добавляем csv)
+media\products (туда добавляем фотографии товара)
+
+Запуск: python manage.py import_data
+
+Проверяем наполненость таблиц через dbeaver (select * from myapp_product mp;)
+
+В главной дериктории создаем:
+static\css\style.css
+static\images и добавляем туда фотографии логотипов
+
+В myapp создаем templates\core
+Пишем base.html (шапка) и login.html
+Пишем style.css
+
+Пишем views
+Пишем urls
+Пишем product_form.html
+Пишем product_list.html
+
+Запуск python manage.py runserver
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# office lock files
+.~lock.*

@@ -6,81 +6,52 @@
 
 {% block content %}
 
-<!-- Кнопка добавления (только для администратора) -->
-<div class="order-actions" style="margin-bottom: 20px; text-align: right;">
-    {% if user.role == "admin" %}
-    <a href="{% url 'order_create' %}" class="btn btn-primary">Добавить заказ</a>
-    {% endif %}
-</div>
-
-<!-- Кнопка возврата к товарам -->
-<div style="margin-top: 20px;">
-    <a href="{% url 'product_list' %}" class="btn btn-secondary">← Вернуться к товарам</a>
-    <br><br>
+<div style="display: flex;">
+    <div>
+        <a href="{% url 'product_list' %}" class="button-v">← Вернуться к товарам</a>
+        <br><br>
+    </div>
+    <!-- Кнопка добавления (только для администратора) -->
+    <div style="margin-left: auto;">
+        {% if user.role == "admin" %}
+            <a href="{% url 'order_create' %}" class="button-v">Добавить заказ</a>
+        {% endif %}
+    </div>
 </div>
 
 <!-- Список заказов в виде карточек (как на макете) -->
-<div class="orders-grid">
+<div>
     {% for order in orders %}
     <div class="order-card">
-        
-        <!-- Артикул заказа -->
-        <div class="order-field">
-            <div class="field-label">Артикул заказа</div>
-            <div class="field-value">
-                {% for item in order.items.all %}
-                    {{ item.product.article }} ({{ item.quantity }} шт.){% if not forloop.last %}, {% endif %}
-                {% empty %}
-                    Нет товаров
-                {% endfor %}
-            </div>
+        <div class="details">
+            <strong>Артикул заказа:</strong>
+            {% for item in order.items.all %}
+                {{ item.product.article }} ({{ item.quantity }} шт.){% if not forloop.last %}, {% endif %}
+            {% empty %}
+                Нет товаров
+            {% endfor %}
+            <br />
+            Статус заказа: {{ order.get_status_display }}
+            <br />
+            Адрес пункта выдачи: {{ order.pickup_point.address }}
+            <br />
+            Дата заказа: {{ order.order_date|date:"d.m.Y" }}
+            <br />
+            {% if user.role == "admin" %}
+            
+                <a href="{% url 'order_edit' order.id %}" class="button-v">Редактировать</a>
+                <form action="{% url 'order_delete' order.id %}" method="post" style="display: inline;"
+                    onsubmit="return confirm('Вы уверены, что хотите удалить этот заказ?');">
+                    {% csrf_token %}
+                    <button type="submit" class="button-v" style="cursor: pointer; font-family: inherit; font-size: inherit;">Удалить</button>
+                </form>
+            
+            {% endif %}
         </div>
-        
-        <!-- Статус заказа -->
-        <div class="order-field">
-            <div class="field-label">Статус заказа</div>
-            <div class="field-value">
-                <span class="status-badge status-{{ order.status|lower }}">
-                    {{ order.get_status_display }}
-                </span>
-            </div>
-        </div>
-        
-        <!-- Адрес пункта выдачи -->
-        <div class="order-field">
-            <div class="field-label">Адрес пункта выдачи</div>
-            <div class="field-value">{{ order.pickup_point.address }}</div>
-        </div>
-        
-        <!-- Дата заказа -->
-        <div class="order-field">
-            <div class="field-label">Дата заказа</div>
-            <div class="field-value">{{ order.order_date|date:"d.m.Y" }}</div>
-        </div>
-        
-        <!-- Дата доставки -->
-        <div class="order-field">
-            <div class="field-label">Дата доставки</div>
-            <div class="field-value">{{ order.delivery_date|date:"d.m.Y" }}</div>
-        </div>
-        
-        <!-- Действия (только для администратора) -->
-        {% if user.role == "admin" %}
-        <div class="order-actions-buttons">
-            <a href="{% url 'order_edit' order.id %}" class="btn-edit">Редактировать</a>
-            <form action="{% url 'order_delete' order.id %}" method="post" style="display: inline;"
-                  onsubmit="return confirm('Вы уверены, что хотите удалить этот заказ?');">
-                {% csrf_token %}
-                <button type="submit" class="btn-delete">Удалить</button>
-            </form>
-        </div>
-        {% endif %}
-        
+        <div class="date">Дата доставки: {{ order.delivery_date|date:"d.m.Y" }}</div>    
     </div>
     {% empty %}
-    <div class="empty-orders">
-        <p>Заказы не найдены</p>
-    </div>
+    <p>Заказы не найдены</p>
     {% endfor %}
 </div>
 

@@ -81,6 +81,15 @@ TRUNCATE TABLE myapp_supplier CASCADE;
 TRUNCATE TABLE myapp_manufacturer CASCADE;
 TRUNCATE TABLE myapp_category CASCADE;
 
+DROP TABLE IF EXISTS myapp_orderitem CASCADE;
+DROP TABLE IF EXISTS myapp_order CASCADE;
+DROP TABLE IF EXISTS myapp_product CASCADE;
+DROP TABLE IF EXISTS myapp_user CASCADE;
+DROP TABLE IF EXISTS myapp_pickuppoint CASCADE;
+DROP TABLE IF EXISTS myapp_supplier CASCADE;
+DROP TABLE IF EXISTS myapp_manufacturer CASCADE;
+DROP TABLE IF EXISTS myapp_category CASCADE;
+
 -- 1. Категории (должно быть 2: Женская обувь, Мужская обувь)
 SELECT * FROM myapp_category;
 
