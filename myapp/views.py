@@ -41,11 +41,45 @@ class ProductListView(ListView):
                 queryset = queryset.filter(supplier_id=int(supplier_id))
             except ValueError:
                 pass
-        sort = self.request.GET.get("sort", "")
-        if sort == "asc":
-            queryset = queryset.order_by("quantity")
-        elif sort == "desc":
-            queryset = queryset.order_by("-quantity")
+            
+        # Фильтрация по диапазону скидок
+        discount_filter = self.request.GET.get("discount_filter", "")
+        if discount_filter == "0_13":
+            queryset = queryset.filter(discount__gte=0, discount__lt=13)  # от 0 до 12.99% (целое число до 13)
+        elif discount_filter == "13_30":
+            queryset = queryset.filter(discount__gte=13, discount__lt=30) # от 13 до 29.99% (целое число до 30)
+        elif discount_filter == "30_100":
+            queryset = queryset.filter(discount__gte=30, discount__lte=100) # от 30 до 100%
+
+
+        # Совместная сортировка по трем колонкам
+        sort_fields = []
+        
+        # Проверяем сортировку по количеству
+        sort_qty = self.request.GET.get("sort_qty", "")
+        if sort_qty == "asc":
+            sort_fields.append("quantity")
+        elif sort_qty == "desc":
+            sort_fields.append("-quantity")
+
+        # Проверяем сортировку по цене
+        sort_price = self.request.GET.get("sort_price", "")
+        if sort_price == "asc":
+            sort_fields.append("price")
+        elif sort_price == "desc":
+            sort_fields.append("-price")
+
+        # Проверяем сортировку по скидке
+        sort_discount = self.request.GET.get("sort_discount", "")
+        if sort_discount == "asc":
+            sort_fields.append("discount")
+        elif sort_discount == "desc":
+            sort_fields.append("-discount")
+
+        # Если выбран хотя бы один тип сортировки, применяем их все вместе
+        if sort_fields:
+            queryset = queryset.order_by(*sort_fields)
+            
         return queryset
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:

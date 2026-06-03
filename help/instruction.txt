@@ -1,9 +1,13 @@
 Пароль от ROSATOM_EX: ITKol2026
 
-
-
 # Чтение файла с нужной кодировкой
 Get-Content .\task.txt -Encoding utf8
+
+Удалить историю стрелочек
+Remove-Item (Get-PSReadLineOption).HistorySavePath -Force
+ 
+Удалить файлик истории
+Clear-History
 
 
 

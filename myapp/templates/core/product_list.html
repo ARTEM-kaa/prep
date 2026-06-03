@@ -25,11 +25,39 @@
         </div>
 
         <div>
+            <label>Размер скидки:</label><br>
+            <select class="button" name="discount_filter" onchange="this.form.submit()">
+                <option value="all">Все скидки</option>
+                <option value="0_13" {% if request.GET.discount_filter == "0_13" %}selected{% endif %}>От 0% до 12.99%</option>
+                <option value="13_30" {% if request.GET.discount_filter == "13_30" %}selected{% endif %}>От 13% до 29.99%</option>
+                <option value="30_100" {% if request.GET.discount_filter == "30_100" %}selected{% endif %}>От 30% до 100%</option>
+            </select>
+        </div>
+
+        <div>
             <label>Сортировка (кол-во):</label><br>
-            <select class="button" name="sort" onchange="this.form.submit()">
+            <select class="button" name="sort_qty" onchange="this.form.submit()">
                 <option value="">Без сортировки</option>
-                <option value="asc" {% if current_sort == "asc" %}selected{% endif %}>По возрастанию</option>
-                <option value="desc" {% if current_sort == "desc" %}selected{% endif %}>По убыванию</option>
+                <option value="asc" {% if request.GET.sort_qty == "asc" %}selected{% endif %}>По возрастанию</option>
+                <option value="desc" {% if request.GET.sort_qty == "desc" %}selected{% endif %}>По убыванию</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Сортировка (цена):</label><br>
+            <select class="button" name="sort_price" onchange="this.form.submit()">
+                <option value="">Без сортировки</option>
+                <option value="asc" {% if request.GET.sort_price == "asc" %}selected{% endif %}>Сначала дешевле</option>
+                <option value="desc" {% if request.GET.sort_price == "desc" %}selected{% endif %}>Сначала дороже</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Сортировка (скидка):</label><br>
+            <select class="button" name="sort_discount" onchange="this.form.submit()">
+                <option value="">Без сортировки</option>
+                <option value="asc" {% if request.GET.sort_discount == "asc" %}selected{% endif %}>Меньше скидка</option>
+                <option value="desc" {% if request.GET.sort_discount == "desc" %}selected{% endif %}>Больше скидка</option>
             </select>
         </div>
 
@@ -94,4 +122,3 @@
     {% endfor %}
 </div>
 {% endblock %}
-{% comment %} Весь файл для модуля 2 кроме строк [9, 38-42, 45-49, 53, 82-84] всё что связано с ролью просто сотри эти строки {% endcomment %}

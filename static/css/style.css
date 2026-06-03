@@ -1,5 +1,5 @@
 body {
-  font-family: "Times New Roman", serif;
+  font-family: "Arial", serif;
 }
 
 header {
@@ -7,7 +7,7 @@ header {
   justify-content: space-between;
   align-items: center;
   align-content: center;
-  background-color: #7fff00;
+  background-color: #6a5acd;
 
   margin: 10px;
 }
@@ -15,7 +15,6 @@ header {
 a {
     text-decoration: none;
 }
-
 
 .header-left {
   font-size: xxx-large;
@@ -35,11 +34,11 @@ a {
 }
 
 .product-card.sale {
-  background-color: #2e8b57;
+  background-color: #483d8b;
 }
 
 .product-card.out-of-stock {
-  background-color: aqua;
+  background-color: gray;
 }
 
 .product-card .image {
@@ -73,22 +72,22 @@ a {
 }
 
 .button {
-    background-color: #00FA9A;
+    background-color: #4b0082;
     margin-bottom: 10px;
     margin-right: 10px;
     padding: 3px;
     border: solid black 1px;
-    color: #000000;
+    color: #ffffff;
     font-family: inherit;
     font-size: inherit;
     cursor: pointer;
 }
 
 .button-v {
-    background-color: #00FA9A;
+    background-color: #4b0082;
     padding: 3px;
     border: solid black 1px;
-    color: #000000;
+    color: #ffffff;
 }
 
 .alert {
