@@ -128,10 +128,15 @@ class Product(models.Model):
         super().save(*args, **kwargs)
     
     def delete(self, *args, **kwargs):
-        """При удалении товара — удаляем его фото"""
-        if self.photo and os.path.isfile(self.photo.path):
-            os.remove(self.photo.path)
+        # Сохраняем путь к фото до удаления записи (если фото существует)
+        photo_path = self.photo.path if self.photo and os.path.isfile(self.photo.path) else None
+        
+        # Пытаемся удалить запись из БД — если возникнет ProtectedError, исключение прервёт выполнение
         super().delete(*args, **kwargs)
+        
+        # Если дошли до этой строки — запись успешно удалена, удаляем фото
+        if photo_path:
+            os.remove(photo_path)
 
 
 class Order(models.Model):

@@ -21,6 +21,12 @@
                 {% endfor %}
             </div>
         {% endif %}
+
+        <div>
+            {% if is_edit %}
+                <small>ID товара: {{ object.id }} (автоматически, только для чтения)</small>
+            {% endif %}
+        </div>
         
         <!-- Артикул -->
         <div>
@@ -28,9 +34,6 @@
             {{ form.article }}
             {% if form.article.errors %}
                 <div>{{ form.article.errors }}</div>
-            {% endif %}
-            {% if is_edit %}
-                <small>ID товара: {{ object.id }} (автоматически, только для чтения)</small>
             {% endif %}
         </div>
         

@@ -107,3 +107,5 @@ wheels/
 
 # office lock files
 .~lock.*
+
+https://github.com/n0tsSzzz/exam

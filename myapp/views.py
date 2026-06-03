@@ -10,6 +10,7 @@ from django.views.generic import CreateView, ListView, UpdateView, View, DeleteV
 from django.http import JsonResponse
 from django.db import transaction
 import random
+from django.db.models.deletion import ProtectedError
 
 from .forms import ProductForm, OrderForm
 from .models import Product, Supplier, Category, Manufacturer, Order, OrderItem
@@ -135,12 +136,12 @@ class ProductDeleteView(AdminRequiredMixin, DeleteView):
     model = Product
     success_url = reverse_lazy('product_list')
     
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         product = self.get_object()
         try:
             product.delete()
             messages.success(request, "Товар успешно удалён")
-        except Exception:
+        except ProtectedError:
             messages.error(request, "Невозможно удалить товар, так как он присутствует в заказах")
         return redirect('product_list')
     
